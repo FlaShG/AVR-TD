@@ -1,0 +1,14 @@
+Turmplazierung über Touch: [Karsten, Ju]
+- 1 Sekunde halten zum Turmbauen
+
+Turm-Fähigkeiten: []
+- Schießen
+
+Gegner: [Sascha]
+- Panzer, die eine Linie entlang fahren
+
+Level: []
+- 3 Bereiche:
+-- Pfad für Panzer
+-- Plätze für eigene Türme
+-- Plätze für gegnerische Türme
