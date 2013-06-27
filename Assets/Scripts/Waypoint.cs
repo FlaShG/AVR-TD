@@ -25,7 +25,7 @@ public class Waypoint : MonoBehaviour
         }
     }
     
-    static Waypoint GetRandomStart()
+    public static Waypoint GetRandomStart()
     {
         return starts[Random.Range(0,starts.Count)];
     }
@@ -36,7 +36,8 @@ public class Waypoint : MonoBehaviour
         if(next)
         {
             Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, next.transform.position);
+            Gizmos.DrawLine(transform.position + Vector3.up, next.transform.position);
+            Gizmos.DrawLine(transform.position, transform.position + Vector3.up);
         }
 	}
     #endif
