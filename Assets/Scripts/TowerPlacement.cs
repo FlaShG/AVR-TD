@@ -1,5 +1,7 @@
 using UnityEngine;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Tuio;
 
 public class TowerPlacement : MonoBehaviour
@@ -7,52 +9,59 @@ public class TowerPlacement : MonoBehaviour
 	public Texture2D icon;
 	public List<GameObject> towers = new List<GameObject>();
 	public GameObject towerTemplate;
+	public LayerMask layerMask;
+	public Stopwatch watch = new Stopwatch();
+	public TimeSpan requiredDownTime = TimeSpan.FromSeconds(1);
+	float percentageSure = 0f;
 	
 	void OnGUI()
 	{
 		for(int i = 0; i < TuioInput.touchCount; ++i)
 		{
 			var touch = TuioInput.GetTouch(i);
-			showTouchCircle(touch.position);
 			Vector3 position;
+			percentageSure = (float)(watch.Elapsed.TotalMilliseconds / requiredDownTime.TotalMilliseconds);
+			print(touch.phase + " " + watch.Elapsed + " -> " + percentageSure + "%");
+			showTouchCircle(touch.position, percentageSure);
+			
 			switch(touch.phase)
 			{
 				case TouchPhase.Ended:
-					//if(!currentRadius){
-					if(GetPosition(touch, out position))
+					var timeIsUp = watch.Elapsed > requiredDownTime;
+					watch.Reset();				
+					if(timeIsUp)
 					{
-						var newTower = Instantiate(towerTemplate, position, Quaternion.identity) as GameObject;
-						towers.Add(newTower);
+						if(GetPosition(touch, out position)) {
+							var newTower = Instantiate(towerTemplate, position, Quaternion.identity) as GameObject;
+							towers.Add(newTower);
+						}
 					}
-						//currentRadius = ( as GameObject).GetComponent<Radius>();
-					//}
 					break;
+				case TouchPhase.Moved:
 				case TouchPhase.Began:
-					/*if(currentRadius && Vector3.Distance(currentRadius.transform.position, GetPosition(touch)) < 77)
-					{
-						currentRadius.Done();
-						currentRadius = null;
-					}*/
+					if(!watch.IsRunning) { watch.Reset(); watch.Start(); }
 					break;
 			}
 		}
 	}
 	
-	void showTouchCircle(Vector2 pos) {
-		var x = pos.x - icon.width / 2;
-		var y = Screen.height - pos.y - icon.height / 2;
-		GUI.DrawTexture(new Rect(x, y, icon.width, icon.height), icon);
+	void showTouchCircle(Vector2 pos, float percentageSure) {
+		percentageSure = Mathf.Clamp(0.1f, percentageSure, 1.5f);
+		var w = icon.width * percentageSure;
+		var h = icon.height * percentageSure;
+		var x = pos.x - w / 2f;
+		var y = Screen.height - pos.y - h / 2f;
+		GUI.DrawTexture(new Rect(x, y, w, h), icon);
 	}
 	
 	bool GetPosition(Tuio.Touch touch, out Vector3 position)
 	{
 		Ray ray = Camera.main.ScreenPointToRay(touch.position);
-		//RaycastHit hit;
-		float length = 0;
-		if(new Plane(Vector3.up, Vector3.up * 20).Raycast(ray, out length))
+		RaycastHit hit;
+		
+		if(Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
 		{
-			//return hit.point;
-			position = ray.origin + ray.direction * length;
+			position = hit.point;
 			return true;
 		}
 		position = Vector2.zero;
