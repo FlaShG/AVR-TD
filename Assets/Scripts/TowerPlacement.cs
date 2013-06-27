@@ -13,16 +13,17 @@ public class TowerPlacement : MonoBehaviour
 		for(int i = 0; i < TuioInput.touchCount; ++i)
 		{
 			var touch = TuioInput.GetTouch(i);
-			Vector2 pos = TuioInput.GetTouch(i).position;
-			var x = pos.x - icon.width / 2;
-			var y = Screen.height - pos.y - icon.height / 2;
-			GUI.DrawTexture(new Rect(x, y, icon.width, icon.height), icon);
+			showTouchCircle(touch.position);
+			Vector3 position;
 			switch(touch.phase)
 			{
 				case TouchPhase.Ended:
 					//if(!currentRadius){
-						var newTower = Instantiate(towerTemplate, GetPosition(touch), Quaternion.identity) as GameObject;
+					if(GetPosition(touch, out position))
+					{
+						var newTower = Instantiate(towerTemplate, position, Quaternion.identity) as GameObject;
 						towers.Add(newTower);
+					}
 						//currentRadius = ( as GameObject).GetComponent<Radius>();
 					//}
 					break;
@@ -37,7 +38,13 @@ public class TowerPlacement : MonoBehaviour
 		}
 	}
 	
-	private Vector3 GetPosition(Tuio.Touch touch)
+	void showTouchCircle(Vector2 pos) {
+		var x = pos.x - icon.width / 2;
+		var y = Screen.height - pos.y - icon.height / 2;
+		GUI.DrawTexture(new Rect(x, y, icon.width, icon.height), icon);
+	}
+	
+	bool GetPosition(Tuio.Touch touch, out Vector3 position)
 	{
 		Ray ray = Camera.main.ScreenPointToRay(touch.position);
 		//RaycastHit hit;
@@ -45,8 +52,10 @@ public class TowerPlacement : MonoBehaviour
 		if(new Plane(Vector3.up, Vector3.up * 20).Raycast(ray, out length))
 		{
 			//return hit.point;
-			return ray.origin + ray.direction * length;
+			position = ray.origin + ray.direction * length;
+			return true;
 		}
-		return Vector3.zero;
+		position = Vector2.zero;
+		return false;
 	}	
 }
