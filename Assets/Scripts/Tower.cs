@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Linq;
 
 [RequireComponent(typeof(SphereCollider))]
 public class Tower : MonoBehaviour
@@ -30,14 +31,27 @@ public class Tower : MonoBehaviour
         Entity target = null;
         float distance = Mathf.Infinity;
         
+        bool containsNull = false;
         foreach(var e in enemiesInRange)
         {
-            float dist = Vector3.Distance(transform.position, e.transform.position);
-            if(dist < distance)
+            if(e)
             {
-                target = e;
-                distance = dist;
+                float dist = Vector3.Distance(transform.position, e.transform.position);
+                if(dist < distance)
+                {
+                    target = e;
+                    distance = dist;
+                }
             }
+            else
+            {
+                containsNull = true;
+            }
+        }
+        
+        if(containsNull)
+        {
+            enemiesInRange = enemiesInRange.Where(x => x != null).ToList();
         }
         
         if(target)
@@ -55,7 +69,6 @@ public class Tower : MonoBehaviour
 
 	void OnTriggerEnter(Collider other)
     {
-        print("da isser");
         if(other.CompareTag("Enemy"))
         {
             enemiesInRange.Add(other.GetComponent<Entity>());

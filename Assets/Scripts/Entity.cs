@@ -9,5 +9,14 @@ public class Entity : MonoBehaviour
     public void ApplyDamage(float amount)
     {
         health -= amount;
+        if(health <= 0)
+        {
+            Die();
+        }
+    }
+    
+    public virtual void Die()
+    {
+        Destroy(gameObject);
     }
 }

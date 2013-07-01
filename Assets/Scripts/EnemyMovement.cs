@@ -7,7 +7,11 @@ public class EnemyMovement : MonoBehaviour
     private Waypoint nextWaypoint;
     
     public float speed = 3;
-    public float steer = 360;
+    [RangeAttribute(50,200)]
+    public float steer = 120;
+    [RangeAttribute(1,10)]
+    public int damageToBase = 1;
+    
     
     void Awake()
     {
@@ -27,23 +31,35 @@ public class EnemyMovement : MonoBehaviour
 	
     void Update()
     {
-        me.position = Vector3.MoveTowards(me.position, me.position + me.forward, speed * Time.deltaTime);
-        
-        me.rotation = Quaternion.RotateTowards(me.rotation, GetTargetRotation(), steer * Time.deltaTime);
-        
-        if(Vector3.Distance(me.position, nextWaypoint.transform.position) < 0.1f)
+        float distance = Vector3.Distance(me.position, nextWaypoint.transform.position);
+        var next = nextWaypoint.next;
+    
+        float travelDistance = speed * Time.deltaTime;
+        if(travelDistance >= distance)
         {
-            var next = nextWaypoint.next;
-            if(next)
+            me.position = nextWaypoint.transform.position;
+            if(!next)
+            {
+                BaseHealth.ApplyDamage(damageToBase);
+                Destroy(gameObject);            
+            }
+        }
+        else
+        {
+            me.position = Vector3.MoveTowards(me.position, me.position + me.forward, travelDistance);
+            me.rotation = Quaternion.RotateTowards(me.rotation, GetTargetRotation(), steer * Time.deltaTime);
+        }
+        
+        if(next)
+        {
+            float angle = Vector3.Angle(me.forward, next.transform.position - me.position);
+            if(distance < speed / steer * angle * 0.6f)
             {
                 nextWaypoint = next;
             }
-            else
-            {
-                //lost a life!
-                Destroy(gameObject);
-            }
         }
+        
+
 	}
     
     Quaternion GetTargetRotation()
