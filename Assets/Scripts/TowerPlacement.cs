@@ -10,13 +10,18 @@ public class TowerPlacement : MonoBehaviour
 	public List<GameObject> towers = new List<GameObject>();
 	public GameObject towerTemplate;
 	public LayerMask layerMask;
-	public Stopwatch watch = new Stopwatch();
+	Stopwatch watch = new Stopwatch();
 	public TimeSpan requiredDownTime = TimeSpan.FromSeconds(1);
+	//TimeSpan[] downTimes = new TimeSpan[0]; // Nette Idee, evtl. wichtig, weil Touch-Informationen beim Stehenbleiben der Figuren gesendet werden.
 	float percentageSure = 0f;
 	
 	void OnGUI()
 	{
-		for(int i = 0; i < TuioInput.touchCount; ++i)
+		var count = TuioInput.touchCount;
+		/*if(count > downTimes.Length) {
+			Array.Resize(ref downTimes, count);
+		}*/
+		for(int i = 0; i < count; ++i)
 		{
 			var touch = TuioInput.GetTouch(i);
 			Vector3 position;
@@ -46,7 +51,7 @@ public class TowerPlacement : MonoBehaviour
 	}
 	
 	void showTouchCircle(Vector2 pos, float percentageSure) {
-		percentageSure = Mathf.Clamp(0.1f, percentageSure, 1.5f);
+		percentageSure = Mathf.Clamp(0.1f, percentageSure, 1.0f);
 		var w = icon.width * percentageSure;
 		var h = icon.height * percentageSure;
 		var x = pos.x - w / 2f;
