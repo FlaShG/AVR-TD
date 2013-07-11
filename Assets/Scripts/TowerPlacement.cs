@@ -9,9 +9,10 @@ public class TowerPlacement : MonoBehaviour
 	public Texture2D icon;
 	public List<GameObject> towers = new List<GameObject>();
 	public GameObject towerTemplate;
-	public LayerMask layerMask;
-	Stopwatch watch = new Stopwatch();
+	public Stopwatch watch = new Stopwatch();
 	public TimeSpan requiredDownTime = TimeSpan.FromSeconds(1);
+	
+	public LayerMask layerMask;
 	//TimeSpan[] downTimes = new TimeSpan[0]; // Nette Idee, evtl. wichtig, weil Touch-Informationen beim Stehenbleiben der Figuren gesendet werden.
 	float percentageSure = 0f;
 	
@@ -22,18 +23,19 @@ public class TowerPlacement : MonoBehaviour
 			Array.Resize(ref downTimes, count);
 		}*/
 		for(int i = 0; i < count; ++i)
-		{
+		{	 
+
 			var touch = TuioInput.GetTouch(i);
 			Vector3 position;
-			percentageSure = (float)(watch.Elapsed.TotalMilliseconds / requiredDownTime.TotalMilliseconds);
-			print(touch.phase + " " + watch.Elapsed + " -> " + percentageSure + "%");
+			percentageSure = (float)(watch.Elapsed.TotalMilliseconds / 1000);
+//print(touch.phase + " " + watch.Elapsed + " -> " + percentageSure + "%");
 			showTouchCircle(touch.position, percentageSure);
 			
 			switch(touch.phase)
 			{
 				case TouchPhase.Ended:
 					var timeIsUp = watch.Elapsed > requiredDownTime;
-					watch.Reset();				
+					//watch.Reset();				
 					if(timeIsUp)
 					{
 						if(GetPosition(touch, out position)) {
@@ -64,10 +66,13 @@ public class TowerPlacement : MonoBehaviour
 		Ray ray = Camera.main.ScreenPointToRay(touch.position);
 		RaycastHit hit;
 		
-		if(Physics.Raycast(ray, out hit, Mathf.Infinity, layerMask))
+		if(Physics.Raycast(ray, out hit, Mathf.Infinity))
 		{
-			position = hit.point;
-			return true;
+			if(hit.collider.CompareTag("TowerGround"))
+			{
+				position = hit.point;
+				return true;
+			}
 		}
 		position = Vector2.zero;
 		return false;
