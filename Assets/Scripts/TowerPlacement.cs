@@ -8,6 +8,7 @@ public class TowerPlacement : MonoBehaviour
 {
 	public TowerBuilder towerBuilder;
 	public Tower towerTemplate;
+    public LayerMask raycastLayers;
 	
 	void Update()
 	{
@@ -24,7 +25,7 @@ public class TowerPlacement : MonoBehaviour
     
        	RaycastHit hit;
 		
-		if(TowerPhysics.Raycast(touch, out hit))
+		if(TowerPhysics.Raycast(touch, out hit, raycastLayers))
         {
             TowerBuilder tb;
             
