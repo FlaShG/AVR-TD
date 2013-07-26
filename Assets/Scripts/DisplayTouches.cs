@@ -13,7 +13,7 @@ public class DisplayTouches : MonoBehaviour
         {
             Tuio.Touch touch = TuioInput.GetTouch(i);
             
-            GUI.DrawTexture(new Rect(touch.position.x - size.x/2, touch.position.y - size.y/2, size.x, size.y), texture);
+            GUI.DrawTexture(new Rect(touch.position.x - size.x/2, Screen.height - touch.position.y - size.y/2, size.x, size.y), texture);
         }
 	}
 }

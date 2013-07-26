@@ -199,7 +199,7 @@ namespace Tuio
         {
             if(Input.GetMouseButtonDown(0))
             {
-                touches.Add(mouseID, new Tuio.Touch(mouseID, MirrorY(Input.mousePosition)));
+                touches.Add(mouseID, new Tuio.Touch(mouseID, Input.mousePosition));
                 touchOrder.Add(mouseID);
             }
             else if(Input.GetMouseButtonUp(0))
@@ -213,16 +213,10 @@ namespace Tuio
                     Tuio.Touch t = touches[mouseID];
                     if(t != null)
                     {
-                        t.SetNewTouchPoint(MirrorY(Input.mousePosition));
+                        t.SetNewTouchPoint(Input.mousePosition);
                     }
                 }
             }
-        }
-        
-        static Vector2 MirrorY(Vector2 v)
-        {
-            v.y = Screen.height - v.y;
-            return v;
         }
 	}
 }
