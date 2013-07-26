@@ -5,35 +5,51 @@ using Tuio;
 public class TowerBuilder : MonoBehaviour
 {
     private List<Tuio.Touch> touches = new List<Tuio.Touch>();
-    private float process = 0;
+    private float progress = 0;
     public Tower tower;
 
-    
+    /// <summary>
+    /// Register a new touch on a TowerBuilder.
+    /// </summary>
+    /// <param name="touch">The touch object that should be registered.</param>
 	public void RegisterTouch(Tuio.Touch touch)
     {
-        touches.Add(touch);
+        touches.Add(touch); // Add the new touch to the list of touches on this TowerBuilder
     }
     
+    /// <summary>
+    /// Update the state of the builder (by calling helper functions)
+    /// </summary>
+    /// <remarks>
+    /// Called once per frame.
+    /// </remarks>
     void Update()
     {
         UpdateTouches();
+
 		UpdatePosition();
-        UpdateProcess();
+ 
+        UpdateProgress();
+
     }
     
+    /// <summary>
+    /// Update the touches on the TowerBuilder.
+    /// </summary>
     void UpdateTouches()
     {
         List<Tuio.Touch> delete = new List<Tuio.Touch>();
         
-        foreach(var touch in touches)
+        // TODO: Refactor to Linq to make this easier and avoid creation of useless lists like "delete"
+        foreach(var touch in touches) // Iterate through the active touches on this builder
         {
-            if(touch.phase == TouchPhase.Ended)
+            if(touch.phase == TouchPhase.Ended) // If a touch as ended...
             {
-                delete.Add(touch);
+                delete.Add(touch); // ...add it to the list of touches we need to delete.
             }
         }
         
-        foreach(var touch in delete)
+        foreach(var touch in delete) // delete all touches that should be deleted.
         {
             touches.Remove(touch);
         }
@@ -47,18 +63,23 @@ public class TowerBuilder : MonoBehaviour
 		}
 	}
     
-    void UpdateProcess()
+    /// <summary>
+    /// Update the Progress of the tower, depending on if any touches are still on this TowerBuilder or not.
+    /// </summary>
+    void UpdateProgress()
     {
-        process += (touches.Count > 0 ? 1 : -1) * Time.deltaTime;
+        progress += (touches.Count > 0 ? 1 : -1) * Time.deltaTime; // Update current progress:
+            // If any touches are still on this Builder: Increase depending on elapsed time
+            // If no more touches are on the builder: Decrease depending on elapsed time
         
-        if(process <= -.5f)
+        if(progress <= -.5f) // If progress falls below the threshold of -0.5...
         {
-            Destroy(gameObject);
+            Destroy(gameObject); // cancel build by destroying the Builder.
         }
-        else if(process >= 1)
+        else if(progress >= 1) // If progress increases beyond the threshold of 1
         {
-            Instantiate(tower, transform.position, Quaternion.identity);
-            Destroy(gameObject);
+            Instantiate(tower, transform.position, Quaternion.identity); // Create "real" Tower...
+            Destroy(gameObject); // ...and delete TowerBuilder
         }
     }
 }
