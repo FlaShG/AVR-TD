@@ -60,9 +60,12 @@ public class TowerBuilder : MonoBehaviour
 		if(touches.Count > 0)
 		{
             RaycastHit hit;
-            if(TowerPhysics.Raycast(touches[touches.Count-1], out hit))
+            if(TowerPhysics.Raycast(touches[touches.Count-1], out hit, ~gameObject.layer))
             {
-                transform.position = hit.point;
+                if(hit.collider.CompareTag("TowerGround"))
+                {
+                    transform.position = hit.point;
+                }
             }
 		}
 	}

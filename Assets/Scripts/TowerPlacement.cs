@@ -8,7 +8,6 @@ public class TowerPlacement : MonoBehaviour
 {
 	public TowerBuilder towerBuilder;
 	public Tower towerTemplate;
-	public LayerMask layerMask;
 	
 	void Update()
 	{
