@@ -7,11 +7,18 @@ public class BaseHealth : MonoBehaviour
     [SerializeField]
     private int lives = 20;
 
+    /// <summary>
+    /// Instantiate the BaseHealth.
+    /// </summary>
 	void Awake()
     {
         instance = this;
 	}
     
+    /// <summary>
+    /// Apply damage to the base.
+    /// </summary>
+    /// <param name="lives">Amount of lives the base should loose</param>
     public static void ApplyDamage(int lives)
     {
         instance.lives -= lives;
@@ -21,6 +28,9 @@ public class BaseHealth : MonoBehaviour
         }
     }
     
+    /// <summary>
+    /// Finish the game on zero lives left.
+    /// </summary>
     private static void GameOver()
     {
         Time.timeScale = 0;
