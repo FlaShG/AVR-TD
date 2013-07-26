@@ -21,11 +21,9 @@ public class TowerPlacement : MonoBehaviour
     
     void ProcessTouch(Tuio.Touch touch)
     {
-        RaycastHit hit;
-
-		Ray ray = Camera.main.ScreenPointToRay(touch.position);
+       	 RaycastHit hit;
 		
-		if(Physics.Raycast(ray, out hit, Mathf.Infinity))
+		if(TowerPhysics.Raycast(touch, out hit))
         {
             TowerBuilder tb;
             

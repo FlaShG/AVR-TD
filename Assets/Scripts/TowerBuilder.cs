@@ -17,6 +17,7 @@ public class TowerBuilder : MonoBehaviour
     void Update()
     {
         UpdateTouches();
+		UpdatePosition();
         UpdateProcess();
     }
     
@@ -37,6 +38,14 @@ public class TowerBuilder : MonoBehaviour
             touches.Remove(touch);
         }
     }
+	
+	void UpdatePosition()
+	{
+		if(touches.Count > 0)
+		{
+			//transform.position = 
+		}
+	}
     
     void UpdateProcess()
     {
