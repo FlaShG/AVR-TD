@@ -31,8 +31,8 @@ public class TowerPlacement : MonoBehaviour
             
             if(hit.collider.CompareTag("TowerGround"))
             {
-                var tbgo = Instantiate(towerBuilder, hit.point, Quaternion.identity) as GameObject;
-                tb = tbgo.GetComponent<TowerBuilder>();
+                tb = Instantiate(towerBuilder, hit.point, Quaternion.identity) as TowerBuilder;
+                //tb = tbgo.GetComponent<TowerBuilder>();
                 tb.tower = towerTemplate;
             }
             else
