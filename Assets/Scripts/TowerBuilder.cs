@@ -59,7 +59,11 @@ public class TowerBuilder : MonoBehaviour
 	{
 		if(touches.Count > 0)
 		{
-			//transform.position = 
+            RaycastHit hit;
+            if(TowerPhysics.Raycast(touches[touches.Count-1], out hit))
+            {
+                transform.position = hit.point;
+            }
 		}
 	}
     
