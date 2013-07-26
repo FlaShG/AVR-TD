@@ -214,6 +214,7 @@ namespace Tuio
                     if(t != null)
                     {
                         t.SetNewTouchPoint(Input.mousePosition);
+                        t.phase = TouchPhase.Moved;
                     }
                 }
             }
