@@ -6,17 +6,22 @@ public class TowerPhysics : MonoBehaviour
 {
 	public static bool Raycast(Tuio.Touch touch, out RaycastHit hit, LayerMask raycastLayers)
     {
-        Ray ray = getRay(touch);
-        return Physics.Raycast(ray, out hit, Mathf.Infinity, raycastLayers);
+        return Raycast(touch.position, out hit, raycastLayers);
 	}
     
 	public static bool Raycast(Tuio.Touch touch, out RaycastHit hit)
     {
-        return Raycast(touch, out hit, Physics.kDefaultRaycastLayers);
+        return Raycast(touch.position, out hit, Physics.kDefaultRaycastLayers);
+	}
+    
+	public static bool Raycast(Vector2 position, out RaycastHit hit, LayerMask raycastLayers)
+    {
+        Ray ray = getRay(position);
+        return Physics.Raycast(ray, out hit, Mathf.Infinity, raycastLayers);
 	}
 	
-	static Ray getRay(Tuio.Touch touch)
+	static Ray getRay(Vector2 position)
     {
-		return Camera.main.ScreenPointToRay(touch.position);
+		return Camera.main.ScreenPointToRay(position);
 	}
 }
