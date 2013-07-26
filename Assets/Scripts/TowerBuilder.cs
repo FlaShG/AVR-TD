@@ -60,7 +60,7 @@ public class TowerBuilder : MonoBehaviour
 		if(touches.Count > 0)
 		{
             RaycastHit hit;
-            if(TowerPhysics.Raycast(touches[touches.Count-1], out hit, ~gameObject.layer))
+            if(TowerPhysics.Raycast(touches[touches.Count-1], out hit, ~gameObject.layer & Physics.kDefaultRaycastLayers))
             {
                 if(hit.collider.CompareTag("TowerGround"))
                 {

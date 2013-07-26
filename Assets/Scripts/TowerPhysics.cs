@@ -12,7 +12,7 @@ public class TowerPhysics : MonoBehaviour
     
 	public static bool Raycast(Tuio.Touch touch, out RaycastHit hit)
     {
-        return Raycast(touch, out hit, ~0);
+        return Raycast(touch, out hit, Physics.kDefaultRaycastLayers);
 	}
 	
 	static Ray getRay(Tuio.Touch touch)
